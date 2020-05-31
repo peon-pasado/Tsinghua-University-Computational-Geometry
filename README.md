@@ -1,2 +1,1 @@
-# -Computational-Geometry
-computational geometry - Tsinghua University
+# Tsinghua-University-Computational-Geometry
