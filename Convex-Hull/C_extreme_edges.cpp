@@ -20,7 +20,7 @@ long long area2(Point p, Point q, Point s) {
     return cross(p, q) + cross(q, s) + cross(s, p);
 }
 
-bool toLeft(Point p, Point q, Point s) {
+bool to_left(Point p, Point q, Point s) {
     return area2(p, q, s) > 0;
 }
 
@@ -31,7 +31,7 @@ void extreme_edges(Point S[], int n, Edge E[]) {
             int toLeftCount = 0;
             for (int r = 0; r < n; ++r) {
                 if (p == r || q == r) continue;
-                toLeftCount += toLeft(S[p], S[q], S[r]);
+                toLeftCount += to_left(S[p], S[q], S[r]);
             }
             if (toLeftCount == 0 || toLeftCount == n-2) {
                 E[index++] = Edge(S[p], S[q]);
