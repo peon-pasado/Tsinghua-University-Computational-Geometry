@@ -15,4 +15,8 @@ bool in_triangle(const Point<T> a, const Point<U> b, const Point<V> c, const Poi
     return ab_left == bc_left && ab_left == ca_left;
 }
 
+template<class T, class U, class V>
+bool to_left(Point<T> o, Point<U> a, Point<V> b) {
+    return o.cross(a, b) >= 0;
+}
 #endif

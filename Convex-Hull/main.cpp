@@ -11,7 +11,7 @@ int main() {
     for (int i = 0; i < n; ++i) {
         cin >> p[i];
     }
-    p.erase(convex_hull_extreme_edge(p.begin(), p.end()), p.end());
+    p.erase(graham_scan(p.begin(), p.end()), p.end());
     cout << p.size() << '\n';
     for (int i = 0; i < p.size(); ++i) {
         cout << p[i] << '\n';

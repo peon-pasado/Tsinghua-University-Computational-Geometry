@@ -1,5 +1,6 @@
 #include <iostream>
 #include <algorithm>
+#include <vector>
 #include "geometry/utils.h"
 
 /**
@@ -78,4 +79,70 @@ Iterator convex_hull_extreme_edge(Iterator first, Iterator last) {
 	if (distance(first, jt) >= 2 && abs(prev(jt)->cross(*jt, *first)) <= eps)
 		return jt;
 	return next(jt);
+}
+
+
+/**
+ * @name convex hull: Jarvis March
+ * @author Miguel Mini
+ * @idea
+ * 		- minimum point with usual 
+ * 		comparator is extreme point.
+ * 
+ * 		- we can extender convex hull
+ * 		with to_left test.
+ * 
+ * @complexity O(nh), where h = size(convex_hull)
+**/ 
+template<class Iterator>
+Iterator jarvis_march(Iterator first, const Iterator last) {
+	if (first == last) return first;
+	swap(*first, *min_element(first, last));
+	auto hull = first;
+	while (next(hull) != last) {
+		auto s = next(hull);
+		for (auto it = first; it != last; ++it) {
+			if (*it == *hull || *it == *s) continue;
+			if (hull->cross(*s, *it) < 0 
+				|| (hull->cross(*s, *it) == 0 && (*s - *hull).norm2() < (*it - *hull).norm2())) {
+				s = it;
+			}
+		}
+		if (s == first) break;
+		hull = next(hull);
+		swap(*s, *hull);
+	}
+	return next(hull);
+}
+
+/**
+ * @name convex hull: Graham Scan
+ * @author Miguel Mini
+ * @idea
+ * 		- minimum point with usual 
+ * 		comparator is extreme point.
+ * 
+ * 		- we can sort by angle and 
+ * 		build a partial convex hull 
+ * 		in each step.
+ * 
+ * @complexity O(n \log n)
+**/ 
+template<class Iterator>
+Iterator graham_scan(Iterator first, Iterator last) {
+	if (first == last) return last;
+	swap(*first, *min_element(first, last));
+	sort(next(first), last, [first](auto p, auto q)->bool {
+		auto ccw = first->cross(p, q);
+		return ccw > 0 || (ccw == 0 && first->dot(p, p) < first->dot(q, q));
+	});
+	std::vector<Iterator> s;
+	for (auto it = first; it != last; ++it) {
+		while (s.size() >= 2 && s[s.size()-2]->cross(*(s.back()), *it) <= 0) {
+			s.pop_back();
+		}
+		s.push_back(it);
+	}
+	for (auto it : s) *(first++) = *it;
+	return first;
 }
