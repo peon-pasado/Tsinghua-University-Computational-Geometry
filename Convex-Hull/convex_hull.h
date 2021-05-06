@@ -4,6 +4,12 @@
 #include "geometry/utils.h"
 
 /**
+ * INPUT: SET OF POINTS
+ * OUTPUT: PARTITION = [CONVEX HULL ANTI-CLOCKWISE](OTHER POINTS]
+**/ 
+
+
+/**
  * @name convex hull: extreme point criterion
  * @author Miguel Mini
  * @idea
@@ -136,13 +142,16 @@ Iterator graham_scan(Iterator first, Iterator last) {
 		auto ccw = first->cross(p, q);
 		return ccw > 0 || (ccw == 0 && first->dot(p, p) < first->dot(q, q));
 	});
-	std::vector<Iterator> s;
+	std::vector<Iterator> s, t;
 	for (auto it = first; it != last; ++it) {
 		while (s.size() >= 2 && s[s.size()-2]->cross(*(s.back()), *it) <= 0) {
+			t.push_back(s.back()); 
 			s.pop_back();
 		}
 		s.push_back(it);
 	}
 	for (auto it : s) *(first++) = *it;
-	return first;
+	auto end_position = first;
+	for (auto it : t) *(first++) = *it;
+	return end_position;
 }
